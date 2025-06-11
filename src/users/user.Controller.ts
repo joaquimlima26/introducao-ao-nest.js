@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Body, Post} from '@nestjs/common'
 import { UserService } from './user.Service'
-
-@Controller('/User')
+import { User } from "@prisma/client"
+@Controller('users')
 export class UsersController {
     private userService: UserService
 
@@ -9,20 +9,25 @@ export class UsersController {
         this.userService = userService
     }
 
-
-    @Get()
-    findAllUsers() {
-        return this.userService.findAll()
-    }
-
-    @Get(":id")
-    findOneUser( @Param("id") id: string){
-        return this.userService.findOne(parseInt(id))
-    }
-
+    // Rota Criar Usuario
     @Post()
-    createUser( @Body() user: { name: string, email: string}){
-        return this.userService.create(user)
+    create(@Body() data: any){
+        return this.userService.create(data)
     }
+
+    // @Get()
+    // findAllUsers() {
+    //     return this.userService.findAll()
+    // }
+
+    // @Get(":id")
+    // findOneUser( @Param("id") id: string){
+    //     return this.userService.findOne(parseInt(id))
+    // }
+
+    // @Post()
+    // createUser( @Body() user: { name: string, email: string}){
+    //     return this.userService.create(user)
+    // }
 
 }
