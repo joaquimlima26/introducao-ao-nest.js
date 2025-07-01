@@ -1,33 +1,41 @@
-import { Controller, Get, Param, Body, Post} from '@nestjs/common'
+import { Controller, Get, Param, Body, Post, ParseIntPipe, Put, Delete } from '@nestjs/common'
 import { UserService } from './user.Service'
-import { User } from "@prisma/client"
+import { Prisma, User } from "@prisma/client"
 @Controller('users')
 export class UsersController {
     private userService: UserService
 
-    constructor(userService: UserService){
+    constructor(userService: UserService) {
         this.userService = userService
     }
 
     // Rota Criar Usuario
     @Post()
-    create(@Body() data: any){
+    create(@Body() data: any) {
         return this.userService.create(data)
     }
 
-    // @Get()
-    // findAllUsers() {
-    //     return this.userService.findAll()
-    // }
+    @Get()
+    findAllUsers() {
+        return this.userService.findAll()
+    }
 
-    // @Get(":id")
-    // findOneUser( @Param("id") id: string){
-    //     return this.userService.findOne(parseInt(id))
-    // }
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.userService.findOne(id)
+    }
 
-    // @Post()
-    // createUser( @Body() user: { name: string, email: string}){
-    //     return this.userService.create(user)
-    // }
+    @Put(':id')
+    async updateUser(
+        @Param('id', ParseIntPipe) id: string,
+        @Body() userData: Prisma.UserUpdateInput
+    ): Promise<User> {
+        return this.userService.update(id, userData);
+    }
+
+    @Delete(':id')
+    async deleteUser(@Param('id') id: string): Promise<User> {
+        return this.userService.remove(id);
+    }
 
 }
