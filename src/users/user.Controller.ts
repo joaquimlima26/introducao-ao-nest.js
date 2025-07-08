@@ -25,17 +25,17 @@ export class UsersController {
         return this.userService.findOne(id)
     }
 
-    @Put(':id')
-    async updateUser(
-        @Param('id', ParseIntPipe) id: string,
-        @Body() userData: Prisma.UserUpdateInput
-    ): Promise<User> {
-        return this.userService.update(id, userData);
-    }
+    // @Put(':id')
+    // async updateUser(
+    //     @Param('id', ParseIntPipe) id: string,
+    //     @Body() userData: Prisma.UserUpdateInput
+    // ): Promise<User> {
+    //     return this.userService.update(id, userData);
+    // }
 
-    @Delete(':id')
-    async deleteUser(@Param('id') id: string): Promise<User> {
-        return this.userService.remove(id);
-    }
+    // @Delete(':id')
+    // async deleteUser(@Param('id') id: string): Promise<User> {
+    //     return this.userService.remove(id);
+    // }
 
 }
