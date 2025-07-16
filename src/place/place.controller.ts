@@ -112,7 +112,7 @@ export class PlaceController {
 
     @Delete(':id')
     @ApiOperation({ summary: 'Deletar local e imagens no Cloudinary' })
-     @ApiResponse({ status: 200, description: 'Place deletado com sucesso' })
+    @ApiResponse({ status: 200, description: 'Place deletado com sucesso' })
     async deletePlace(@Param('id') id: string) {
         return this.placeService.delete(id);
     }

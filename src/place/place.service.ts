@@ -16,12 +16,24 @@ export class PlaceService {
     return this.prisma.place.findMany();
   }
 
-  async create(data: { name: string, type: any, phone: string, latitude: number, longitude: number, images: ImageObject[] }) {
+  async create(data: { 
+    name: string, 
+    type: any, 
+    phone: string, 
+    latitude: number, 
+    longitude: number, 
+    images: ImageObject[] }) {
     return this.prisma.place.create({ data });
   }
 
-  async update(id: string, data: Partial<Place>, newImages?: Buffer[]): Promise<Place> {
-    const place = await this.prisma.place.findUnique({ where: { id } });
+  async update(
+    id: string, 
+    data: Partial<Place>, 
+    newImages?: Buffer[]
+  ): Promise<Place> {
+    const place = await this.prisma.place.findUnique({ 
+      where: { id } 
+    });
     if (!place) throw new BadRequestException('Local não encontrado');
 
     let images = place.images as ImageObject[];
