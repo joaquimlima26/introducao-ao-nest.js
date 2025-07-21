@@ -79,8 +79,8 @@ export class AuthService {
                     googleId
                 }
             })
-            return user
         }
+        return user
     }
     singJwtforUser(user: User) {
         const payload = {

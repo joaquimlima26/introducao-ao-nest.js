@@ -30,9 +30,7 @@ export class GoogleService {
             name
         })
 
-        if (!user) {
-            throw new Error('Usuário não encontrado');
-        }
+
 
         return this.authService.singJwtforUser(user)
     }
