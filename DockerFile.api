@@ -1,0 +1,20 @@
+# Etapa 01: Define imagen base do Node
+FROM node:20-alpine
+
+# Etapa 02: Define o diretorio de trabalho do conteinar 
+WORKDIR /app
+
+#Etapa 03: Copiar arquivos de depêdencia e instalar 
+
+# COPY package.json /.
+# COPY package-lock.json /.
+COPY package*.json /.
+RUN npm install 
+
+# Etapa 04: Copir o restante dos arquivos e compilar
+COPY . .
+RUN npx prisma generate  
+RUN npm run build
+
+# Etapa 05: Expor a porta da aplicação 
+EXPOSE 3000
