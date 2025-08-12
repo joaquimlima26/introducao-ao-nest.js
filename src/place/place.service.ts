@@ -3,6 +3,9 @@ import { Place } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ImageObject } from './types/image-object';
 import { CloudinaryService } from './cloudinary.service';
+import { skip } from 'node:test';
+import { take } from 'rxjs';
+import { match } from 'assert';
 
 
 @Injectable()
@@ -15,29 +18,51 @@ export class PlaceService {
   async findAll() {
     return this.prisma.place.findMany();
   }
+  async findPaginated(page: number, limit: number) {
+    const [places, total] =  await this.prisma.$transaction([
+      this.prisma.place.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { created_at: "desc" }
+      }),
+      this.prisma.place.count()
+    ])
+    return {
+      data: places,
+      meta: {
+        total,
+        page,
+        lastPage: Math.ceil(total/limit)
 
-  async create(data: { 
-    name: string, 
-    type: any, 
-    phone: string, 
-    latitude: number, 
-    longitude: number, 
-    images: ImageObject[] }) {
+      }
+
+    }
+  }
+
+
+  async create(data: {
+    name: string,
+    type: any,
+    phone: string,
+    latitude: number,
+    longitude: number,
+    images: ImageObject[]
+  }) {
     return this.prisma.place.create({ data });
   }
 
   async update(
-    id: string, 
-    data: Partial<Place>, 
+    id: string,
+    data: Partial<Place>,
     newImages?: Buffer[]
   ): Promise<Place> {
-    const place = await this.prisma.place.findUnique({ 
-      where: { id } 
+    const place = await this.prisma.place.findUnique({
+      where: { id }
     });
     if (!place) throw new BadRequestException('Local não encontrado');
 
     let images = place.images as ImageObject[];
-    
+
     // Se forem enviadas novas imagens
     if (newImages && newImages.length > 0) {
       // Deletar imagens antigas

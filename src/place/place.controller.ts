@@ -9,14 +9,16 @@ import {
     UploadedFiles,
     UseInterceptors,
     BadRequestException,
+    Query,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { PlaceService } from './place.service';
 import { CloudinaryService } from './cloudinary.service';
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { File as MulterFile } from 'multer';
-import { ApiBody, ApiConsumes, ApiResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiResponse, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { UpdatePlaceDto } from './dto/update-place.dto';
+import { skip, take } from 'rxjs';
 
 @Controller('places')
 export class PlaceController {
@@ -29,6 +31,18 @@ export class PlaceController {
     findAll() {
         return this.placeService.findAll();
     }
+
+    @Get('pagineted')
+    @ApiOperation({summary: "Lista locais paginados! "})
+    @ApiQuery({name: 'page', required: false, type: Number, example: 1})
+    @ApiQuery({name: 'limit', required: false, type: Number, example: 10})
+    async findPagineted(@Query('page') page = 1, @Query('limit') limit = 10) {
+        const parsePage = Math.max(1, Number(page))
+        const parseLimit = Math.min(1, Number(limit))
+        return this.placeService.findPaginated(parsePage, parseLimit)
+    }
+ 
+    
 
     @Post()
     @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 3 }]))
