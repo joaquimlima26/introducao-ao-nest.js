@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { AdminGuard } from "src/auth/admin.guard";
-import { JwtAuthGuard } from "src/auth/jwt.guard";
-import { TuristaGuard } from "src/auth/turista.guard";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { AdminGuard } from "../auth/admin.guard";
+import { JwtAuthGuard } from "../auth/jwt.guard";
+import { TuristaGuard } from "../auth/turista.guard";
 import { UserService } from "./user.Service";
-import { RegisterDto } from "src/auth/dto/register.dto";
+import { RegisterDto } from "../auth/dto/register.dto";
 
 @ApiTags('users') 
 @UseGuards(JwtAuthGuard) // Protege todas as rotas deste controller com JWT
@@ -30,4 +30,23 @@ export class UsersController {
   findAll() {
     return this.usersService.findAll();
   }
+
+  @Get(':id')
+    findOne( @Param('id') id: string) {
+        return this.usersService.findOne(id)
+    }
+
+    @Put(':id')
+    @ApiOperation({ summary: 'Atualizar um usuário' })
+    @ApiResponse({ status: 200, description: 'Usuário atualizado com sucesso.' })
+    @ApiParam({ name: 'id', type: Number, description: 'ID do usuário' })
+    @Put(':id')
+    update( @Param('id') id: string, @Body() data:any){
+        return this.usersService.update(id, data)
+    }
+
+    @Delete(':id')
+    remove( @Param('id') id: string){
+        return this.usersService.remove(id)
+    }
 }
